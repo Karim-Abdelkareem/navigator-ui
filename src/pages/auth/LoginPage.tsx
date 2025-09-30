@@ -1,51 +1,83 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
-import { Eye, EyeOff, Briefcase, ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuthStore } from '@/store/auth';
-import { toast } from '@/hooks/use-toast';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+import { Eye, EyeOff, Briefcase, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useAuthStore } from "@/store/auth";
+import { AuthService } from "@/services/auth";
+import { toast } from "@/hooks/use-toast";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
 
   const { t } = useTranslation();
-  const { login } = useAuthStore();
+  const { login2 } = useAuthStore();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      // Mock successful login
-      const mockUser = {
-        id: '1',
-        name: 'John Doe',
+    try {
+      const res = await AuthService.login({
         email: formData.email,
-        role: formData.email.includes('hr') ? 'hr' : 'candidate' as 'candidate' | 'hr',
-      };
-      
-      login(mockUser, 'mock-token-123');
-      
-      toast({
-        title: t('success'),
-        description: t('loginSuccess'),
+        password: formData.password,
       });
 
-      navigate('/');
+      if (res.success) {
+        login2(
+          {
+            id: res.data.user.id,
+            username: res.data.user.username,
+            email: res.data.user.email,
+            role: (res.data.user.role === "user" ? "user" : "admin") as
+              | "user"
+              | "admin",
+          },
+          "cookie"
+        );
+
+        toast({
+          title: t("success"),
+          description: res.message || t("loginSuccess"),
+        });
+
+        navigate("/");
+      } else {
+        toast({
+          title: t("error"),
+          description: res.message || "Login failed",
+          variant: "destructive",
+        });
+      }
+    } catch (err: unknown) {
+      type AxiosErrorLike = { response?: { data?: { message?: string } } };
+      const axiosErr = err as AxiosErrorLike;
+      const message =
+        axiosErr.response?.data?.message ||
+        (err instanceof Error ? err.message : "Login failed");
+      toast({
+        title: t("error"),
+        description: message,
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,7 +113,9 @@ export default function LoginPage() {
                   <Briefcase className="h-6 w-6 text-primary-foreground" />
                 </div>
               </div>
-              <CardTitle className="text-2xl font-bold text-gradient">Welcome Back</CardTitle>
+              <CardTitle className="text-2xl font-bold text-gradient">
+                Welcome Back
+              </CardTitle>
               <CardDescription>
                 Sign in to your TalentMatch account
               </CardDescription>
@@ -89,7 +123,7 @@ export default function LoginPage() {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">{t('email')}</Label>
+                  <Label htmlFor="email">{t("email")}</Label>
                   <Input
                     id="email"
                     name="email"
@@ -103,12 +137,12 @@ export default function LoginPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="password">{t('password')}</Label>
+                  <Label htmlFor="password">{t("password")}</Label>
                   <div className="relative">
                     <Input
                       id="password"
                       name="password"
-                      type={showPassword ? 'text' : 'password'}
+                      type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
                       value={formData.password}
                       onChange={handleInputChange}
@@ -147,13 +181,13 @@ export default function LoginPage() {
                   variant="gradient"
                   disabled={isLoading}
                 >
-                  {isLoading ? t('loading') : t('signIn')}
+                  {isLoading ? t("loading") : t("signIn")}
                 </Button>
               </form>
 
               <div className="mt-6 text-center">
                 <p className="text-sm text-muted-foreground">
-                  Don't have an account?{' '}
+                  Don't have an account?{" "}
                   <Link
                     to="/register"
                     className="text-primary hover:underline font-medium"
@@ -163,11 +197,7 @@ export default function LoginPage() {
                 </p>
               </div>
 
-              <div className="mt-4 text-xs text-muted-foreground text-center">
-                <p>Demo credentials:</p>
-                <p>Candidate: user@example.com / HR: hr@example.com</p>
-                <p>Password: any password</p>
-              </div>
+              {/* Removed demo credentials */}
             </CardContent>
           </Card>
         </motion.div>

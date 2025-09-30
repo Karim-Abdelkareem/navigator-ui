@@ -1,9 +1,9 @@
-import { Navigate } from 'react-router-dom';
-import { useAuthStore } from '@/store/auth';
+import { Navigate } from "react-router-dom";
+import { useAuthStore } from "@/store/auth";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requireRole?: 'candidate' | 'hr';
+  requireRole?: "user" | "admin";
 }
 
 export function ProtectedRoute({ children, requireRole }: ProtectedRouteProps) {

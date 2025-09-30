@@ -1,12 +1,33 @@
-import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
-import { Search, MapPin, Clock, DollarSign, Briefcase, Heart, ExternalLink, Filter } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+import {
+  Search,
+  MapPin,
+  Clock,
+  DollarSign,
+  Briefcase,
+  Heart,
+  ExternalLink,
+  Filter,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Job {
   id: string;
@@ -24,9 +45,9 @@ interface Job {
 export default function JobMatchingPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [locationFilter, setLocationFilter] = useState('');
-  const [typeFilter, setTypeFilter] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [locationFilter, setLocationFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation();
 
@@ -35,62 +56,79 @@ export default function JobMatchingPage() {
     setTimeout(() => {
       const mockJobs: Job[] = [
         {
-          id: '1',
-          title: 'Senior Frontend Developer',
-          company: 'TechCorp Inc.',
-          location: 'San Francisco, CA',
-          salary: '$120k - $150k',
-          type: 'Full-time',
-          description: 'Join our team to build next-generation web applications using React and TypeScript.',
-          requiredSkills: ['React', 'TypeScript', 'JavaScript', 'CSS', 'Git'],
+          id: "1",
+          title: "Senior Frontend Developer",
+          company: "TechCorp Inc.",
+          location: "San Francisco, CA",
+          salary: "$120k - $150k",
+          type: "Full-time",
+          description:
+            "Join our team to build next-generation web applications using React and TypeScript.",
+          requiredSkills: ["React", "TypeScript", "JavaScript", "CSS", "Git"],
           matchPercentage: 95,
           postedDays: 2,
         },
         {
-          id: '2',
-          title: 'Full Stack Engineer',
-          company: 'StartupXYZ',
-          location: 'Remote',
-          salary: '$100k - $130k',
-          type: 'Full-time',
-          description: 'Build scalable web applications from frontend to backend using modern technologies.',
-          requiredSkills: ['Node.js', 'React', 'Python', 'AWS', 'Docker'],
+          id: "2",
+          title: "Full Stack Engineer",
+          company: "StartupXYZ",
+          location: "Remote",
+          salary: "$100k - $130k",
+          type: "Full-time",
+          description:
+            "Build scalable web applications from frontend to backend using modern technologies.",
+          requiredSkills: ["Node.js", "React", "Python", "AWS", "Docker"],
           matchPercentage: 87,
           postedDays: 5,
         },
         {
-          id: '3',
-          title: 'Data Scientist',
-          company: 'DataFlow Analytics',
-          location: 'New York, NY',
-          salary: '$110k - $140k',
-          type: 'Full-time',
-          description: 'Analyze large datasets and build machine learning models for business insights.',
-          requiredSkills: ['Python', 'Machine Learning', 'SQL', 'Pandas', 'TensorFlow'],
+          id: "3",
+          title: "Data Scientist",
+          company: "DataFlow Analytics",
+          location: "New York, NY",
+          salary: "$110k - $140k",
+          type: "Full-time",
+          description:
+            "Analyze large datasets and build machine learning models for business insights.",
+          requiredSkills: [
+            "Python",
+            "Machine Learning",
+            "SQL",
+            "Pandas",
+            "TensorFlow",
+          ],
           matchPercentage: 82,
           postedDays: 1,
         },
         {
-          id: '4',
-          title: 'DevOps Engineer',
-          company: 'CloudSystems',
-          location: 'Austin, TX',
-          salary: '$95k - $125k',
-          type: 'Contract',
-          description: 'Manage cloud infrastructure and implement CI/CD pipelines.',
-          requiredSkills: ['AWS', 'Docker', 'Kubernetes', 'Git', 'Linux'],
+          id: "4",
+          title: "DevOps Engineer",
+          company: "CloudSystems",
+          location: "Austin, TX",
+          salary: "$95k - $125k",
+          type: "Contract",
+          description:
+            "Manage cloud infrastructure and implement CI/CD pipelines.",
+          requiredSkills: ["AWS", "Docker", "Kubernetes", "Git", "Linux"],
           matchPercentage: 78,
           postedDays: 3,
         },
         {
-          id: '5',
-          title: 'UI/UX Designer',
-          company: 'Design Studio Pro',
-          location: 'Los Angeles, CA',
-          salary: '$80k - $100k',
-          type: 'Part-time',
-          description: 'Create beautiful and intuitive user interfaces for web and mobile applications.',
-          requiredSkills: ['Figma', 'Adobe XD', 'Prototyping', 'User Research', 'CSS'],
+          id: "5",
+          title: "UI/UX Designer",
+          company: "Design Studio Pro",
+          location: "Los Angeles, CA",
+          salary: "$80k - $100k",
+          type: "Part-time",
+          description:
+            "Create beautiful and intuitive user interfaces for web and mobile applications.",
+          requiredSkills: [
+            "Figma",
+            "Adobe XD",
+            "Prototyping",
+            "User Research",
+            "CSS",
+          ],
           matchPercentage: 65,
           postedDays: 7,
         },
@@ -102,33 +140,38 @@ export default function JobMatchingPage() {
   }, []);
 
   useEffect(() => {
-    let filtered = jobs.filter(job => {
-      const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           job.requiredSkills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()));
-      
-      const matchesLocation = !locationFilter || job.location.toLowerCase().includes(locationFilter.toLowerCase());
-      const matchesType = !typeFilter || job.type === typeFilter;
+    let filtered = jobs.filter((job) => {
+      const matchesSearch =
+        job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        job.requiredSkills.some((skill) =>
+          skill.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+      const matchesLocation =
+        locationFilter === "all" ||
+        job.location.toLowerCase().includes(locationFilter.toLowerCase());
+      const matchesType = typeFilter === "all" || job.type === typeFilter;
 
       return matchesSearch && matchesLocation && matchesType;
     });
 
     // Sort by match percentage
     filtered = filtered.sort((a, b) => b.matchPercentage - a.matchPercentage);
-    
+
     setFilteredJobs(filtered);
   }, [jobs, searchTerm, locationFilter, typeFilter]);
 
   const getMatchColor = (percentage: number) => {
-    if (percentage >= 90) return 'text-success';
-    if (percentage >= 75) return 'text-warning';
-    return 'text-muted-foreground';
+    if (percentage >= 90) return "text-success";
+    if (percentage >= 75) return "text-warning";
+    return "text-muted-foreground";
   };
 
   const getMatchBadgeVariant = (percentage: number) => {
-    if (percentage >= 90) return 'default';
-    if (percentage >= 75) return 'secondary';
-    return 'outline';
+    if (percentage >= 90) return "default";
+    if (percentage >= 75) return "secondary";
+    return "outline";
   };
 
   return (
@@ -139,7 +182,9 @@ export default function JobMatchingPage() {
         className="space-y-8"
       >
         <div className="text-center">
-          <h1 className="text-3xl font-bold mb-4 text-gradient">{t('jobMatching')}</h1>
+          <h1 className="text-3xl font-bold mb-4 text-gradient">
+            {t("jobMatching")}
+          </h1>
           <p className="text-lg text-muted-foreground">
             Discover jobs that perfectly match your skills and experience
           </p>
@@ -169,9 +214,11 @@ export default function JobMatchingPage() {
                   <SelectValue placeholder="All locations" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All locations</SelectItem>
+                  <SelectItem value="all">All locations</SelectItem>
                   <SelectItem value="remote">Remote</SelectItem>
-                  <SelectItem value="san francisco">San Francisco, CA</SelectItem>
+                  <SelectItem value="san francisco">
+                    San Francisco, CA
+                  </SelectItem>
                   <SelectItem value="new york">New York, NY</SelectItem>
                   <SelectItem value="austin">Austin, TX</SelectItem>
                   <SelectItem value="los angeles">Los Angeles, CA</SelectItem>
@@ -182,7 +229,7 @@ export default function JobMatchingPage() {
                   <SelectValue placeholder="All job types" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All job types</SelectItem>
+                  <SelectItem value="all">All job types</SelectItem>
                   <SelectItem value="Full-time">Full-time</SelectItem>
                   <SelectItem value="Part-time">Part-time</SelectItem>
                   <SelectItem value="Contract">Contract</SelectItem>
@@ -224,11 +271,17 @@ export default function JobMatchingPage() {
                         <div className="flex-1">
                           <div className="flex items-start justify-between mb-3">
                             <div>
-                              <h3 className="text-xl font-semibold mb-1">{job.title}</h3>
-                              <p className="text-muted-foreground font-medium">{job.company}</p>
+                              <h3 className="text-xl font-semibold mb-1">
+                                {job.title}
+                              </h3>
+                              <p className="text-muted-foreground font-medium">
+                                {job.company}
+                              </p>
                             </div>
-                            <Badge 
-                              variant={getMatchBadgeVariant(job.matchPercentage)}
+                            <Badge
+                              variant={getMatchBadgeVariant(
+                                job.matchPercentage
+                              )}
                               className="ml-4"
                             >
                               {job.matchPercentage}% match
@@ -254,11 +307,17 @@ export default function JobMatchingPage() {
                             </div>
                           </div>
 
-                          <p className="text-muted-foreground mb-3">{job.description}</p>
+                          <p className="text-muted-foreground mb-3">
+                            {job.description}
+                          </p>
 
                           <div className="flex flex-wrap gap-1 mb-3">
                             {job.requiredSkills.map((skill, skillIndex) => (
-                              <Badge key={skillIndex} variant="outline" className="text-xs">
+                              <Badge
+                                key={skillIndex}
+                                variant="outline"
+                                className="text-xs"
+                              >
                                 {skill}
                               </Badge>
                             ))}
@@ -266,11 +325,18 @@ export default function JobMatchingPage() {
                         </div>
 
                         <div className="flex flex-col gap-2 lg:ml-4">
-                          <Button variant="gradient" className="w-full lg:w-auto">
+                          <Button
+                            variant="gradient"
+                            className="w-full lg:w-auto"
+                          >
                             <ExternalLink className="mr-2 h-4 w-4" />
                             Apply Now
                           </Button>
-                          <Button variant="outline" size="sm" className="w-full lg:w-auto">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-full lg:w-auto"
+                          >
                             <Heart className="mr-2 h-4 w-4" />
                             Save Job
                           </Button>
@@ -287,7 +353,8 @@ export default function JobMatchingPage() {
                 <Search className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                 <h3 className="text-lg font-medium mb-2">No jobs found</h3>
                 <p className="text-muted-foreground">
-                  Try adjusting your search terms or filters to find more opportunities
+                  Try adjusting your search terms or filters to find more
+                  opportunities
                 </p>
               </CardContent>
             </Card>
@@ -299,7 +366,9 @@ export default function JobMatchingPage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span>Showing {filteredJobs.length} of {jobs.length} jobs</span>
+                <span>
+                  Showing {filteredJobs.length} of {jobs.length} jobs
+                </span>
                 <span>Sorted by best match</span>
               </div>
             </CardContent>
