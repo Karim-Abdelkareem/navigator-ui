@@ -6,7 +6,7 @@ import axios, {
 } from "axios";
 
 // Base configuration
-const API_BASE_URL = "http://localhost:3000/api/v1";
+const API_BASE_URL = "https://genai-backend-beta.vercel.app/api/v1";
 
 // Augment AxiosRequestConfig to track a single retry
 declare module "axios" {
